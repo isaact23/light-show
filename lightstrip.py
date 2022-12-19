@@ -1,5 +1,4 @@
 from copy import deepcopy
-from grid import Grid
 
 NEOPIXEL_ENABLED = False
 
@@ -12,46 +11,16 @@ except Exception as e:
     print("Error when importing board and/or neopixel:", str(e))
 
 
-class Controller:
-    """
-    A controller for all of the LED strips.
-    """
-
-    def __init__(self, strip_sizes):
-        """
-        Create a controller with LED strips turned off.
-        :param strip_sizes: a tuple listing the sizes of all connected LED strips (e.g. (150, 150, 50)).
-        """
-        self.strips = {}
-        for i, size in enumerate(strip_sizes):
-            self.strips[i] = LightStrip(self, size)
-
-    def get_strip(self, strip):
-        """
-        :param strip: The index of the LightStrip to access.
-        :return: The LightStrip object in the specified index.
-        """
-        return self.strips[strip]
-
-    def write(self):
-        """
-        # Send all pixel data to LED strips.
-        """
-        for i in self.strips:
-            self.strips[i].write()
-
-
 class LightStrip:
     """
     An LED strip.
     """
 
-    def __init__(self, controller, size):
+    def __init__(self, size):
         """
         :param controller: The Controller object this LED strip is assigned to.
         :param size: The number of LEDs on this strip.
         """
-        self.controller = controller
         self.size = size
         self.pixels = [(0, 0, 0)] * size
         self.rule = None  # Color generation rule
@@ -119,14 +88,14 @@ class LightStrip:
             pixels.write()
         except NameError:
             pass
+    
+    def update(self):
+        """
+        Use rules and write to strip.
+        """
+        self.use_rule()
+        self.write()
 
-    def flip_rgb(self, start, end):
-        """
-        Specify a range of pixels for which red and green pixel values should be swapped.
-        :param start: First pixel (inclusive)
-        :param end: Last pixel (exclusive)
-        """
-        self.rgb_flip_ranges.append(range(start, end))
 
     class Segment:
         """
@@ -184,47 +153,3 @@ class LightStrip:
             :return: The number of LEDs this Segment controls.
             """
             return self.end - self.start
-
-
-class MultiSegment:
-    """
-    Manage multiple segments jointly such that LED animations move smoothly between segments.
-    """
-
-    def __init__(self, grid: Grid, *segs, continuous=True, flipped_segs=None):
-        """
-        :param grid: A Grid containing all segments in the game.
-        :param segs: A tuple of integers representing all segment indices.
-        :param flipped_segs: A tuple of integers representing segments from before that should be flipped.
-        """
-
-        self.grid = grid
-        self.continuous = continuous
-        self.segments = []
-        self.flipped_segments = []
-        # Get Segment objects by ID from grid
-        for seg in segs:
-            self.segments.append(grid.get_seg(seg))
-        if flipped_segs is not None:
-            for seg in flipped_segs:
-                self.flipped_segments.append(grid.get_seg(seg))
-
-        self.rule = None
-        self.flipped_rule = None
-
-    def set_rule(self, r):
-        """
-        Set a function for LED color generation to be used on every use_func() call.
-        :param r: The anonymous function.
-        """
-        self.rule = r
-        self.flipped_rule = deepcopy(r).flip()
-
-        cumulative_size = 0
-        for segment in self.segments:
-            if segment in self.flipped_segments:
-                segment.set_rule(deepcopy(self.rule).offset(cumulative_size).flip())
-            else:
-                segment.set_rule(deepcopy(self.rule).offset(cumulative_size))
-            if self.continuous:
-                cumulative_size += segment.size()

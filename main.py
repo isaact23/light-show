@@ -1,13 +1,11 @@
-# It's a me
-# Halloween 2022 project by Andy Thompson and Isaac Thompson
+# Light Strip Control Code
 
 import fpstimer
 import sys
 
-from controller import Controller
-from grid import Grid
-#from emulator import Emulator
-from game import Game
+from colors import *
+from lightstrip import LightStrip
+from rule import Rule
 
 FRAMERATE = 60
 
@@ -15,24 +13,16 @@ FRAMERATE = 60
 def main():
     print("Python version:", sys.version)
 
-    control = Controller((580,))
-    grid = Grid(control)
-    game = Game(control, grid)
-
-    # Begin emulation
-    #emulator = Emulator(grid)
+    light_strip = LightStrip(150)
+    cool_colors = Rule().stripes([RED, WHITE, BLUE], 10).animate(5)
+    light_strip.set_rule(cool_colors)
 
     # Framerate maintainer
     timer = fpstimer.FPSTimer(FRAMERATE)
 
     while True:
-        game.update()  # Update game logic
-        grid.use_rule()  # Update LED colors
-        control.write()  # Update LED strips
-        #emulator.update()  # Update GUI
-        
-        timer.sleep()  # 60 FPS
-        print("RUNNING")
+        light_strip.update()
+        timer.sleep()
 
 
 if __name__ == "__main__":
