@@ -54,7 +54,7 @@ class LightStrip:
         """
         if self.rule is not None:
             for i in range(self.size):
-                self.set_pixel(i, self.rule(pixel=i, seg_size=self.size()))
+                self.set_pixel(i, self.rule(pixel=i, seg_size=self.size))
         else:
             for i in range(self.size):
                 self.set_pixel(i, (0, 0, 0))
