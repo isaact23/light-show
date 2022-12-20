@@ -13,17 +13,17 @@ def zero_to_one(num):
     return num
 
 
-class Mode(enum.Enum):
-    """
-    Different modes for color functions - determines whether colors change based on pixels or time.
-    """
-    PIXEL = 'pixel'
-    TIME = 'time'
-
 class Rule:
     """
     Class passable to Segments and LightStrips that determines LED colors at runtime.
     """
+
+    class Mode(enum.Enum):
+        """
+        Different modes for color functions - determines whether colors change based on pixels or time.
+        """
+        PIXEL = 'pixel'
+        TIME = 'time'
 
     def __init__(self):
         self.func_chain = []  # Every time a new function is generated, append it here.
