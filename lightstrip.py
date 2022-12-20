@@ -73,9 +73,8 @@ class LightStrip:
         Send pixel data to this LED strip.
         """
         try:
-            pixel_count = 1000
-            pixels = neopixel.NeoPixel(board.D18, pixel_count, auto_write=False)
-            for i in range(pixel_count):
+            pixels = neopixel.NeoPixel(board.D18, self.size, auto_write=False)
+            for i in range(self.size):
                 color = self.pixels[i]
                 flip = False
                 for pixel_range in self.rgb_flip_ranges:
