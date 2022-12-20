@@ -56,7 +56,7 @@ class Rule:
         self.func_chain.append(f)
         return self
 
-    def hue_linear(self, frequency=1, mode=self.Mode.PIXEL):
+    def hue_linear(self, frequency=1, mode=Mode.PIXEL):
         """
         Fill pixels with color hue increasing with every pixel.
         :param frequency: How fast hue should increase.
