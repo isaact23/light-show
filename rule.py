@@ -56,7 +56,7 @@ class Rule:
         self.func_chain.append(f)
         return self
 
-    def hue_linear(self, frequency=1, mode=Mode.PIXEL):
+    def hue_linear(self, frequency=1, mode=self.Mode.PIXEL):
         """
         Fill pixels with color hue increasing with every pixel.
         :param frequency: How fast hue should increase.
@@ -67,9 +67,9 @@ class Rule:
         def f(**kwargs):
             # Based on mode, determine the independent variable (i.e. what changes the color).
             var = 0
-            if mode == Mode.PIXEL:
+            if mode == self.Mode.PIXEL:
                 var = kwargs['pixel']
-            elif mode == Mode.TIME:
+            elif mode == self.Mode.TIME:
                 var = time.time() - start_time
             else:
                 raise RuntimeError("Mode", mode, "is invalid for Rule hue_linear().")
@@ -96,9 +96,9 @@ class Rule:
         def f(**kwargs):
             # Based on mode, determine the independent variable (i.e. what changes the color).
             var = 0
-            if mode == Mode.PIXEL:
+            if mode == self.Mode.PIXEL:
                 var = kwargs['pixel']
-            elif mode == Mode.TIME:
+            elif mode == self.Mode.TIME:
                 var = time.time() - start_time
             else:
                 raise RuntimeError("Mode", mode, "is invalid for Rule hue_wave().")
