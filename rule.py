@@ -82,7 +82,7 @@ class Rule:
         self.func_chain.append(f)
         return self
 
-    def hue_wave(self, low_hue, high_hue, frequency=1, mode=Mode.PIXEL):
+    def hue_wave(self, low_hue, high_hue, frequency=1, mode=Mode.PIXEL, saturation=1, visibility=1):
         """
         Generate a rainbow sine wave ranging from low_hue to high_hue.
         :param low_hue: The low hue value (0 thru 360)
@@ -111,7 +111,7 @@ class Rule:
             hue = zero_to_one(hue)
 
             # Generate RGB value from hue
-            rgb = colorsys.hsv_to_rgb(hue, 1, 1)
+            rgb = colorsys.hsv_to_rgb(hue, saturation, visibility)
             return tuple(round(c * 255) for c in rgb)
 
         self.func_chain.append(f)
