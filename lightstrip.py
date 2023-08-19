@@ -23,6 +23,7 @@ class LightStrip:
         """
         self.size = size
         self.pixels = [(0, 0, 0)] * size
+        self.ws = neopixel.NeoPixel(board.D18, self.size, auto_write=False)
         self.rule = None  # Color generation rule
         self.rgb_flip_ranges = []  # Pixel ranges for which to flip red and green values
         # self.neopixel = neopixel.NeoPixel(board.D18, 150, auto_write=False)
@@ -72,21 +73,17 @@ class LightStrip:
         """
         Send pixel data to this LED strip.
         """
-        try:
-            pixels = neopixel.NeoPixel(board.D18, self.size, auto_write=False)
-            for i in range(self.size):
-                color = self.pixels[i]
-                flip = False
-                for pixel_range in self.rgb_flip_ranges:
-                    if i in pixel_range:
-                        flip = True
-                        break
-                if flip:
-                    color = color[1], color[0], color[2]
-                pixels[i] = color
-            pixels.write()
-        except NameError:
-            pass
+        for i in range(self.size):
+            color = self.pixels[i]
+            flip = False
+            for pixel_range in self.rgb_flip_ranges:
+                if i in pixel_range:
+                    flip = True
+                    break
+            if flip:
+                color = color[1], color[0], color[2]
+            self.ws[i] = color
+        self.ws.write()
     
     def update(self):
         """
